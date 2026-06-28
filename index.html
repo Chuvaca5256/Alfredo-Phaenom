@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHÆNOM — Metal experimental · CDMX/EDOMEX</title>
+<meta name="description" content="PHAENOM: metal experimental que fusiona batería, guitarra stoner y samples electrónicos. Formados en 2024 en EDOMEX/CDMX.">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32">
+<link rel="icon" href="assets/favicon.png" sizes="512x512">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#070907;
+    --void-2:#0b0f0a;
+    --panel:#10150f;
+    --panel-edge:rgba(244,242,230,.10);
+    --acid:#27ff12;
+    --acid-soft:#a6ff8e;
+    --acid-dim:#11790a;
+    --yellow:#f3ff1d;
+    --bone:#f4f1e6;
+    --bone-dim:rgba(244,241,230,.62);
+    --bone-faint:rgba(244,241,230,.28);
+    --stage-red:#ff3a5e;
+    --stage-blue:#3a7bff;
+    --maxw:1180px;
+    --gap:clamp(1.25rem, 3vw, 2.5rem);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--void);
+    color:var(--bone);
+    font-family:'Archivo', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--acid);color:#04130a;}
+
+  h1,h2,h3{
+    font-family:'Teko', sans-serif;
+    font-weight:600;
+    letter-spacing:.01em;
+    line-height:.92;
+    margin:0;
+    text-transform:uppercase;
+  }
+
+  .eyebrow{
+    font-family:'Rajdhani', sans-serif;
+    font-weight:700;
+    letter-spacing:.32em;
+    text-transform:uppercase;
+    font-size:.72rem;
+    color:var(--acid);
+    display:flex;
+    align-items:center;
+    gap:.7em;
+  }
+  .eyebrow::before{
+    content:'';
+    width:1.6em;height:2px;
+    background:var(--acid);
+    display:inline-block;
+  }
+
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 clamp(1.25rem, 5vw, 3rem);
+  }
+
+  /* film grain overlay */
+  .grain{
+    position:fixed;inset:0;
+    pointer-events:none;
+    background-image:url('assets/noise.png');
+    background-size:160px 160px;
+    opacity:.045;
+    mix-blend-mode:overlay;
+    z-index:999;
+  }
+
+  /* ===== NAV ===== */
+  .nav{
+    position:fixed;top:0;left:0;right:0;
+    z-index:500;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:.85rem clamp(1.25rem, 5vw, 3rem);
+    background:linear-gradient(to bottom, rgba(5,7,5,.92), rgba(5,7,5,0));
+    backdrop-filter:blur(2px);
+    transition:background .3s ease, padding .3s ease;
+  }
+  .nav.is-scrolled{
+    background:rgba(7,9,7,.88);
+    border-bottom:1px solid var(--panel-edge);
+    padding-top:.55rem;padding-bottom:.55rem;
+  }
+  .nav__mark img{height:26px;width:auto;}
+  .nav__links{
+    display:flex;
+    gap:clamp(1.1rem,2.4vw,2.2rem);
+    font-family:'Rajdhani',sans-serif;
+    font-weight:600;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    font-size:.82rem;
+  }
+  .nav__links a{
+    position:relative;
+    padding:.3rem 0;
+    color:var(--bone-dim);
+    transition:color .2s;
+  }
+  .nav__links a:hover, .nav__links a:focus-visible{color:var(--acid);}
+  .nav__links a::after{
+    content:'';position:absolute;left:0;bottom:0;height:2px;width:0;
+    background:var(--acid);transition:width .25s ease;
+  }
+  .nav__links a:hover::after, .nav__links a:focus-visible::after{width:100%;}
+  .nav__cta{
+    font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.08em;
+    font-size:.78rem;text-transform:uppercase;
+    border:1px solid var(--acid);color:var(--acid);
+    padding:.45rem 1rem;
+    transition:background .2s, color .2s;
+  }
+  .nav__cta:hover{background:var(--acid);color:#04130a;}
+  .nav__toggle{
+    display:none;
+    background:none;border:1px solid var(--bone-faint);
+    width:40px;height:36px;
+    position:relative;cursor:pointer;
+  }
+  .nav__toggle span{
+    position:absolute;left:9px;right:9px;height:2px;background:var(--bone);
+    transition:transform .25s, opacity .25s;
+  }
+  .nav__toggle span:nth-child(1){top:12px;}
+  .nav__toggle span:nth-child(2){top:18px;}
+  .nav__toggle span:nth-child(3){top:24px;}
+  .nav.is-open .nav__toggle span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+  .nav.is-open .nav__toggle span:nth-child(2){opacity:0;}
+  .nav.is-open .nav__toggle span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+
+  /* ===== HERO ===== */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:7rem 1.5rem 5rem;
+    overflow:hidden;
+  }
+  .hero__bg{
+    position:absolute;inset:0;z-index:-2;
+    background-image:url('assets/live-01.jpg');
+    background-size:cover;
+    background-position:center 30%;
+    filter:saturate(1.05);
+    transform:scale(1.04);
+  }
+  .hero__bg::after{content:'';}
+  .hero__scrim{
+    position:absolute;inset:0;z-index:-1;
+    background:
+      radial-gradient(ellipse 70% 55% at 50% 40%, rgba(7,9,7,.35), rgba(7,9,7,.86) 70%),
+      linear-gradient(to top, var(--void) 0%, rgba(7,9,7,.55) 28%, rgba(7,9,7,.45) 60%, rgba(7,9,7,.85) 100%),
+      linear-gradient(180deg, rgba(15,40,8,.5), rgba(7,9,7,.2) 40%);
+    mix-blend-mode:normal;
+  }
+  .hero__scrim::before{
+    content:'';position:absolute;inset:0;
+    background:var(--acid);
+    opacity:.10;
+    mix-blend-mode:color;
+  }
+  .hero__eyebrow{justify-content:center;margin-bottom:1.6rem;}
+  .hero__mark{
+    width:min(640px, 86vw);
+    margin:0 auto;
+    filter:drop-shadow(0 0 28px rgba(39,255,18,.35)) drop-shadow(0 0 70px rgba(39,255,18,.18));
+    animation:flicker 5.5s ease-in-out infinite;
+  }
+  @keyframes flicker{
+    0%,92%,100%{opacity:1;}
+    93%{opacity:.7;}
+    94%{opacity:1;}
+    95.5%{opacity:.55;}
+    96%{opacity:1;}
+  }
+  .hero__sub{
+    max-width:640px;
+    margin:1.4rem auto 0;
+    font-size:clamp(1rem, 1.6vw, 1.18rem);
+    color:var(--bone-dim);
+    line-height:1.6;
+  }
+  .hero__cta{
+    display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;
+    margin-top:2.4rem;
+  }
+  .btn{
+    font-family:'Rajdhani',sans-serif;font-weight:700;
+    letter-spacing:.1em;text-transform:uppercase;font-size:.85rem;
+    padding:.85rem 1.7rem;
+    display:inline-flex;align-items:center;gap:.6em;
+    border:1px solid var(--acid);
+    background:var(--acid);color:#04130a;
+    transition:transform .15s ease, box-shadow .2s ease, background .2s, color .2s;
+    cursor:pointer;
+  }
+  .btn:hover, .btn:focus-visible{
+    transform:translateY(-2px);
+    box-shadow:0 10px 24px -6px rgba(39,255,18,.45);
+  }
+  .btn--ghost{
+    background:transparent;color:var(--bone);border-color:var(--bone-faint);
+  }
+  .btn--ghost:hover, .btn--ghost:focus-visible{
+    border-color:var(--acid);color:var(--acid);
+    box-shadow:none;
+  }
+  .btn svg{width:1.05em;height:1.05em;flex:none;}
+
+  .eq{
+    margin-top:3rem;
+    display:flex;align-items:flex-end;justify-content:center;
+    height:34px;
+    gap:3px;
+  }
+  .eq__bars{display:flex;align-items:flex-end;gap:3px;height:100%;}
+  .eq__bars span{
+    width:3px;background:var(--acid);
+    height:var(--h, 40%);
+    display:inline-block;
+    animation:eqpulse var(--d, 0.9s) ease-in-out infinite;
+    opacity:.85;
+    transform-origin:bottom;
+  }
+  @keyframes eqpulse{
+    0%,100%{transform:scaleY(.35);}
+    50%{transform:scaleY(1);}
+  }
+
+  .scrollcue{
+    position:absolute;bottom:1.6rem;left:50%;transform:translateX(-50%);
+    font-family:'Rajdhani',sans-serif;font-size:.68rem;letter-spacing:.3em;
+    text-transform:uppercase;color:var(--bone-faint);
+    display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  }
+  .scrollcue::after{
+    content:'';width:1px;height:28px;background:linear-gradient(var(--bone-faint), transparent);
+    animation:scrolldown 1.8s ease-in-out infinite;
+  }
+  @keyframes scrolldown{0%{opacity:0;transform:translateY(-6px);}50%{opacity:1;}100%{opacity:0;transform:translateY(10px);}}
+
+  /* ===== MARQUEE ===== */
+  .marquee{
+    position:relative;
+    background:var(--panel);
+    border-top:1px solid var(--panel-edge);
+    border-bottom:1px solid var(--panel-edge);
+    overflow:hidden;
+    padding:.85rem 0;
+    transform:skewY(-1.1deg);
+    margin:-1px 0;
+  }
+  .marquee__track{
+    display:flex;width:max-content;
+    animation:scroll-left 32s linear infinite;
+  }
+  .marquee__track span{
+    font-family:'Teko',sans-serif;font-weight:600;
+    font-size:clamp(1.1rem,2.4vw,1.6rem);
+    text-transform:uppercase;letter-spacing:.04em;
+    color:var(--bone-dim);
+    padding:0 1.4rem;
+    white-space:nowrap;
+  }
+  .marquee__track span.accent{color:var(--yellow);}
+  @keyframes scroll-left{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+
+  /* ===== SECTION GENERIC ===== */
+  section{position:relative;padding:clamp(4rem,9vw,6.5rem) 0;}
+  .section-head{
+    display:flex;flex-direction:column;gap:.85rem;
+    margin-bottom:clamp(2rem,5vw,3.2rem);
+  }
+  .section-head h2{font-size:clamp(2.3rem,6vw,4rem);color:var(--bone);}
+  .section-head h2 em{color:var(--acid);font-style:normal;}
+  .section-head p{
+    color:var(--bone-dim);max-width:620px;font-size:1rem;line-height:1.6;margin:0;
+  }
+
+  /* ===== BIO ===== */
+  .bio__grid{
+    display:grid;grid-template-columns:1.05fr .95fr;gap:var(--gap);
+    align-items:center;
+  }
+  .bio__copy p{
+    color:var(--bone-dim);line-height:1.75;font-size:1.02rem;margin:0 0 1.1rem;
+  }
+  .bio__copy p:last-child{margin-bottom:0;}
+  .bio__copy strong{color:var(--bone);font-weight:600;}
+  .bio__photo{position:relative;}
+  .bio__photo img{
+    width:100%;border:1px solid var(--panel-edge);
+    filter:contrast(1.05);
+  }
+  .bio__photo figcaption{
+    margin-top:.7rem;
+    font-family:'Rajdhani',sans-serif;font-size:.78rem;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--bone-faint);
+  }
+
+  /* ===== PULLQUOTE ===== */
+  .pullquote{padding:5.5rem 0;}
+  .pullquote__panel{
+    position:relative;
+    padding:clamp(3.2rem,7vw,5rem) clamp(1.5rem,6vw,5rem);
+    text-align:center;
+  }
+  .pullquote__panel::before{
+    content:'';position:absolute;inset:0;z-index:-1;
+    background:var(--acid);
+    clip-path:polygon(
+      0% 8%,5% 1%,10% 9%,15% 2%,20% 8%,25% 0%,30% 7%,35% 1%,40% 8%,45% 2%,
+      50% 7%,55% 0%,60% 8%,65% 2%,70% 7%,75% 0%,80% 8%,85% 2%,90% 6%,95% 0%,100% 7%,
+      100% 93%,95% 100%,90% 92%,85% 99%,80% 92%,75% 100%,70% 93%,65% 99%,60% 92%,55% 100%,
+      50% 93%,45% 99%,40% 92%,35% 100%,30% 93%,25% 99%,20% 92%,15% 98%,10% 93%,5% 100%,0% 92%
+    );
+  }
+  .pullquote__panel p{
+    font-family:'Teko',sans-serif;
+    font-weight:600;
+    text-transform:uppercase;
+    color:#04130a;
+    font-size:clamp(1.7rem,4.4vw,3.1rem);
+    line-height:1.08;
+    max-width:980px;
+    margin:0 auto;
+    letter-spacing:.01em;
+  }
+  .pullquote__tag{
+    display:block;margin-top:1.4rem;
+    font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.78rem;
+    letter-spacing:.28em;color:rgba(4,19,10,.65);
+  }
+
+  /* ===== INFLUENCES ===== */
+  .chips{display:flex;flex-wrap:wrap;gap:.8rem;}
+  .chip{
+    font-family:'Rajdhani',sans-serif;font-weight:600;
+    letter-spacing:.04em;font-size:.95rem;
+    border:1px solid var(--panel-edge);
+    padding:.6rem 1.15rem;
+    color:var(--bone);
+    background:var(--panel);
+    display:flex;align-items:center;gap:.55em;
+    transition:border-color .2s, color .2s;
+  }
+  .chip:hover{border-color:var(--acid);color:var(--acid);}
+  .chip i{
+    width:6px;height:6px;border-radius:50%;background:var(--acid);display:inline-block;flex:none;
+  }
+  .sonido__grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:var(--gap);align-items:start;}
+  .sonido__note{color:var(--bone-dim);line-height:1.7;font-size:1rem;}
+  .sonido__note b{color:var(--acid);font-weight:600;}
+
+  /* ===== MEMBERS ===== */
+  .members__grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);
+  }
+  .member{
+    border:1px solid var(--panel-edge);
+    background:var(--panel);
+    padding:2rem 1.6rem 1.8rem;
+    position:relative;
+    transition:border-color .25s, transform .25s;
+  }
+  .member:hover{border-color:var(--acid-dim);transform:translateY(-4px);}
+  .member__icon{
+    width:46px;height:46px;
+    border:1px solid var(--acid);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:1.4rem;
+  }
+  .member__icon svg{width:22px;height:22px;stroke:var(--acid);}
+  .member h3{
+    font-size:1.9rem;color:var(--bone);margin-bottom:.25rem;
+  }
+  .member__role{
+    font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;font-size:.74rem;color:var(--acid);
+    margin-bottom:1rem;display:block;
+  }
+  .member p{color:var(--bone-dim);font-size:.92rem;line-height:1.6;margin:0;}
+  .member a.member__link{
+    display:inline-flex;align-items:center;gap:.4em;margin-top:1rem;
+    font-family:'Rajdhani',sans-serif;font-size:.78rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--bone-dim);border-bottom:1px solid var(--bone-faint);
+    padding-bottom:2px;
+  }
+  .member a.member__link:hover{color:var(--acid);border-color:var(--acid);}
+
+  /* ===== LIVE GALLERY ===== */
+  .vivo{background:var(--void-2);}
+  .vivo__venue{
+    display:inline-flex;align-items:center;gap:.6em;
+    font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.1em;
+    text-transform:uppercase;font-size:.82rem;color:var(--bone-dim);
+    margin-top:.4rem;
+  }
+  .vivo__venue svg{width:1em;height:1em;stroke:var(--acid);}
+  .mosaic{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    grid-auto-rows:130px;
+    gap:.6rem;
+  }
+  .mosaic figure{
+    margin:0;position:relative;overflow:hidden;
+    grid-column:span 3;grid-row:span 2;
+    border:1px solid var(--panel-edge);
+  }
+  .mosaic figure:nth-child(1){grid-column:span 4;grid-row:span 3;}
+  .mosaic figure:nth-child(2){grid-column:span 2;grid-row:span 2;}
+  .mosaic figure:nth-child(3){grid-column:span 2;grid-row:span 3;}
+  .mosaic figure:nth-child(4){grid-column:span 2;grid-row:span 2;}
+  .mosaic figure:nth-child(5){grid-column:span 3;grid-row:span 2;}
+  .mosaic figure:nth-child(6){grid-column:span 3;grid-row:span 2;}
+  .mosaic img{
+    width:100%;height:100%;object-fit:cover;
+    transition:transform .6s ease, filter .4s ease;
+    filter:saturate(1.05);
+  }
+  .mosaic figure::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(to top, rgba(5,7,5,.75), transparent 55%);
+    opacity:0;transition:opacity .35s ease;
+  }
+  .mosaic figcaption{
+    position:absolute;left:0;right:0;bottom:0;padding:.8rem .9rem;
+    font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.06em;
+    font-size:.74rem;text-transform:uppercase;color:var(--bone);
+    opacity:0;transform:translateY(6px);
+    transition:opacity .35s ease, transform .35s ease;
+    z-index:2;
+  }
+  .mosaic figure:hover img{transform:scale(1.06);}
+  .mosaic figure:hover::after, .mosaic figure:hover figcaption{opacity:1;transform:translateY(0);}
+
+  /* ===== ESCUCHA ===== */
+  .escucha__grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);align-items:stretch;
+  }
+  .escucha__card{
+    border:1px solid var(--panel-edge);
+    background:var(--panel);
+    padding:1.4rem;
+  }
+  .escucha__card iframe{width:100%;border:0;border-radius:0;}
+  .stats{
+    display:flex;gap:var(--gap);margin:1.6rem 0 2.2rem;
+  }
+  .stat b{
+    font-family:'Teko',sans-serif;font-size:clamp(2.4rem,5vw,3.4rem);
+    color:var(--acid);display:block;line-height:1;
+  }
+  .stat span{
+    font-family:'Rajdhani',sans-serif;font-size:.74rem;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--bone-dim);
+  }
+  .escucha__copy p{color:var(--bone-dim);line-height:1.7;margin:0 0 1.3rem;}
+  .escucha__links{display:flex;flex-wrap:wrap;gap:.9rem;}
+
+  /* ===== CONTACTO ===== */
+  .contacto__panel{
+    border:1px solid var(--panel-edge);
+    background:var(--panel);
+    display:grid;grid-template-columns:1fr 1fr;
+  }
+  .contacto__info{padding:clamp(2rem,5vw,3.2rem);}
+  .contacto__info p.lead{color:var(--bone-dim);line-height:1.7;margin:0 0 1.8rem;max-width:480px;}
+  .contact-row{
+    display:flex;align-items:center;gap:1rem;
+    padding:1rem 0;border-top:1px solid var(--panel-edge);
+  }
+  .contact-row:first-of-type{border-top:none;}
+  .contact-row svg{width:20px;height:20px;stroke:var(--acid);flex:none;}
+  .contact-row a, .contact-row span{font-size:1rem;color:var(--bone);}
+  .contact-row a:hover{color:var(--acid);}
+  .contact-row .label{
+    font-family:'Rajdhani',sans-serif;font-size:.68rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--bone-faint);display:block;margin-bottom:.15rem;
+  }
+  .contacto__photo{position:relative;min-height:280px;}
+  .contacto__photo img{
+    width:100%;height:100%;object-fit:cover;position:absolute;inset:0;
+    filter:saturate(.3) contrast(1.1);
+  }
+  .contacto__photo::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(160deg, rgba(39,255,18,.28), rgba(7,9,7,.55));
+    mix-blend-mode:multiply;
+  }
+
+  /* ===== FOOTER ===== */
+  footer{
+    border-top:1px solid var(--panel-edge);
+    padding:3rem 0 2.2rem;
+    background:var(--void-2);
+  }
+  .footer__top{
+    display:flex;justify-content:space-between;align-items:center;
+    flex-wrap:wrap;gap:1.6rem;margin-bottom:2.2rem;
+  }
+  .footer__mark img{height:30px;}
+  .social{display:flex;gap:.9rem;}
+  .social a{
+    width:40px;height:40px;border:1px solid var(--panel-edge);
+    display:flex;align-items:center;justify-content:center;
+    transition:border-color .2s, color .2s, transform .2s;
+  }
+  .social a svg{width:17px;height:17px;}
+  .social a:hover{border-color:var(--acid);color:var(--acid);transform:translateY(-3px);}
+  .footer__bottom{
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+    font-family:'Rajdhani',sans-serif;font-size:.76rem;letter-spacing:.06em;
+    color:var(--bone-faint);padding-top:1.6rem;border-top:1px solid var(--panel-edge);
+  }
+
+  /* ===== REVEAL ===== */
+  .rv{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease;}
+  .rv.is-in{opacity:1;transform:translateY(0);}
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width:880px){
+    .nav__links{
+      position:fixed;top:0;right:0;height:100vh;width:min(78vw,320px);
+      background:rgba(8,10,8,.97);
+      flex-direction:column;justify-content:center;align-items:flex-start;
+      padding:0 2.4rem;gap:1.8rem;
+      font-size:1.05rem;
+      transform:translateX(100%);transition:transform .35s ease;
+      border-left:1px solid var(--panel-edge);
+    }
+    .nav.is-open .nav__links{transform:translateX(0);}
+    .nav__cta{display:none;}
+    .nav__toggle{display:block;}
+    .bio__grid, .sonido__grid, .escucha__grid, .contacto__panel{grid-template-columns:1fr;}
+    .bio__photo{order:-1;}
+    .members__grid{grid-template-columns:1fr;}
+    .mosaic{grid-template-columns:repeat(2,1fr);grid-auto-rows:170px;}
+    .mosaic figure, .mosaic figure:nth-child(1), .mosaic figure:nth-child(2), .mosaic figure:nth-child(3), .mosaic figure:nth-child(4), .mosaic figure:nth-child(5), .mosaic figure:nth-child(6){
+      grid-column:span 1;grid-row:span 2;
+    }
+    .stats{gap:2rem;}
+    .contacto__photo{min-height:200px;order:-1;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .hero__mark{animation:none;}
+    .marquee__track{animation:none;}
+    .eq__bars span{animation:none;transform:scaleY(.7);}
+    .rv{opacity:1;transform:none;transition:none;}
+    .scrollcue::after{animation:none;}
+  }
+
+  /* ===== INLINE CSS GENERATED EQ BAR VALUES ===== */
+  .eq__bars span:nth-child(1){--h:53%;animation-duration:1.06s;animation-delay:-0.03s;}
+  .eq__bars span:nth-child(2){--h:31%;animation-duration:0.75s;animation-delay:-0.17s;}
+  .eq__bars span:nth-child(3){--h:29%;animation-duration:1.09s;animation-delay:-1.07s;}
+  .eq__bars span:nth-child(4){--h:29%;animation-duration:1.02s;animation-delay:-0.04s;}
+  .eq__bars span:nth-child(5){--h:21%;animation-duration:0.72s;animation-delay:-0.61s;}
+  .eq__bars span:nth-child(6){--h:87%;animation-duration:1.0s;animation-delay:-0.86s;}
+  .eq__bars span:nth-child(7){--h:53%;animation-duration:0.89s;animation-delay:-0.54s;}
+  .eq__bars span:nth-child(8){--h:38%;animation-duration:1.2s;animation-delay:-0.01s;}
+  .eq__bars span:nth-child(9){--h:37%;animation-duration:1.11s;animation-delay:-0.41s;}
+  .eq__bars span:nth-child(10){--h:31%;animation-duration:0.72s;animation-delay:-0.92s;}
+  .eq__bars span:nth-child(11){--h:62%;animation-duration:0.62s;animation-delay:-0.12s;}
+  .eq__bars span:nth-child(12){--h:76%;animation-duration:1.03s;animation-delay:-0.97s;}
+  .eq__bars span:nth-child(13){--h:66%;animation-duration:0.98s;animation-delay:-1.17s;}
+  .eq__bars span:nth-child(14){--h:64%;animation-duration:0.61s;animation-delay:-0.35s;}
+  .eq__bars span:nth-child(15){--h:23%;animation-duration:1.01s;animation-delay:-0.85s;}
+  .eq__bars span:nth-child(16){--h:28%;animation-duration:1.08s;animation-delay:-0.93s;}
+  .eq__bars span:nth-child(17){--h:66%;animation-duration:1.23s;animation-delay:-1.04s;}
+  .eq__bars span:nth-child(18){--h:64%;animation-duration:0.77s;animation-delay:-0.76s;}
+  .eq__bars span:nth-child(19){--h:52%;animation-duration:0.68s;animation-delay:-0.43s;}
+  .eq__bars span:nth-child(20){--h:27%;animation-duration:1.11s;animation-delay:-0.82s;}
+  .eq__bars span:nth-child(21){--h:49%;animation-duration:1.04s;animation-delay:-0.21s;}
+  .eq__bars span:nth-child(22){--h:89%;animation-duration:0.68s;animation-delay:-0.46s;}
+  .eq__bars span:nth-child(23){--h:25%;animation-duration:0.73s;animation-delay:-0.39s;}
+  .eq__bars span:nth-child(24){--h:58%;animation-duration:0.73s;animation-delay:-0.04s;}
+  .eq__bars span:nth-child(25){--h:90%;animation-duration:0.87s;animation-delay:-0.08s;}
+  .eq__bars span:nth-child(26){--h:81%;animation-duration:1.25s;animation-delay:-0.38s;}
+  .eq__bars span:nth-child(27){--h:76%;animation-duration:0.87s;animation-delay:-1.1s;}
+  .eq__bars span:nth-child(28){--h:89%;animation-duration:0.66s;animation-delay:-0.17s;}
+
+  /* ===== AUDIO PLAYER ===== */
+  .player-bar{
+    position:fixed;
+    left:1.1rem;
+    bottom:1.1rem;
+    z-index:1000;
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+    padding:.55rem .85rem .55rem .55rem;
+    background:var(--panel);
+    border:1px solid var(--panel-edge);
+    box-shadow:0 8px 32px rgba(0,0,0,.45);
+  }
+  .player-bar__btn{
+    flex:none;
+    width:2.25rem;
+    height:2.25rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+    border:1px solid var(--acid);
+    background:rgba(39,255,18,.08);
+    color:var(--acid);
+    cursor:pointer;
+    border-radius:4px;
+    transition:border-color .2s, background .2s, color .2s;
+  }
+  .player-bar__btn:hover,
+  .player-bar__btn:focus-visible{
+    background:rgba(39,255,18,.16);
+    outline:none;
+  }
+  .player-bar__btn svg{
+    width:1rem;
+    height:1rem;
+    flex:none;
+  }
+  .player-bar__icon--pause{display:none;}
+  .player-bar.is-playing .player-bar__icon--play{display:none;}
+  .player-bar.is-playing .player-bar__icon--pause{display:block;}
+  .player-bar .eq{
+    margin-top:0;
+    height:22px;
+  }
+  .player-bar .eq__bars span{
+    animation-play-state:paused;
+  }
+  .player-bar.is-playing .eq__bars span{
+    animation-play-state:running;
+  }
+  .player-bar__label{
+    font-family:'Rajdhani',sans-serif;
+    font-weight:700;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    font-size:.72rem;
+    color:var(--bone);
+    white-space:nowrap;
+  }
+  .player-bar.has-error .player-bar__btn{
+    border-color:var(--bone-faint);
+    background:transparent;
+    color:var(--bone-faint);
+    cursor:not-allowed;
+  }
+  .player-bar.has-error .player-bar__btn:hover,
+  .player-bar.has-error .player-bar__btn:focus-visible{
+    background:transparent;
+  }
+  .player-bar.has-error .player-bar__label{
+    color:var(--bone-dim);
+    letter-spacing:.08em;
+    font-size:.62rem;
+    white-space:normal;
+    max-width:14rem;
+    line-height:1.25;
+  }
+  .player-bar.has-error .eq{opacity:.35;}
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" id="siteNav">
+  <a class="nav__mark" href="#top" aria-label="PHAENOM — inicio">
+    <img src="assets/logo-wordmark.png" alt="PHAENOM">
+  </a>
+  <nav class="nav__links" id="navLinks">
+    <a href="#quienes-somos">Sonido</a>
+    <a href="#vivo">En vivo</a>
+    <a href="#escucha">Escucha</a>
+    <a href="#contacto">Booking</a>
+  </nav>
+  <a class="nav__cta" href="https://open.spotify.com/artist/1eeYnGX0csBYVjjOqDl47u?si=7A3CaOEoSu-0H-3Id6Nszw" target="_blank" rel="noopener">Spotify</a>
+  <button class="nav__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__bg"></div>
+    <div class="hero__scrim"></div>
+    <p class="eyebrow hero__eyebrow">Metal experimental · EDOMEX / CDMX</p>
+    <img class="hero__mark" src="assets/logo-wordmark.png" alt="PHAENOM">
+    <p class="hero__sub">Batería y guitarra stoner fusionadas con secuencias de sintetizadores analógicos, samples y vocales guturales. Formados en 2024.</p>
+    <div class="hero__cta">
+      <a class="btn" href="https://open.spotify.com/artist/1eeYnGX0csBYVjjOqDl47u?si=7A3CaOEoSu-0H-3Id6Nszw" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.52 17.34a.75.75 0 0 1-1.03.25c-2.82-1.72-6.37-2.11-10.55-1.16a.749.749 0 1 1-.33-1.46c4.58-1.04 8.5-.6 11.66 1.34.36.22.47.69.25 1.03zm1.47-3.27a.94.94 0 0 1-1.29.31c-3.23-1.98-8.15-2.56-11.97-1.4a.937.937 0 1 1-.55-1.79c4.36-1.32 9.78-.68 13.5 1.6.44.27.58.85.31 1.28zm.13-3.4C15.74 8.46 9.35 8.24 5.97 9.29a1.125 1.125 0 1 1-.66-2.15c3.88-1.18 10.92-.93 15.03 1.5a1.124 1.124 0 0 1-1.22 1.85z"/></svg>
+        Escuchar en Spotify
+      </a>
+      <a class="btn btn--ghost" href="#vivo">
+        Ver shows en vivo
+      </a>
+    </div>
+    <div class="eq" aria-hidden="true">
+      <div class="eq__bars">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="scrollcue">Scroll</div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>BLACK METAL</span><span class="accent">✦</span>
+      <span>DEATH METAL</span><span class="accent">✦</span>
+      <span>STONER</span><span class="accent">✦</span>
+      <span>ACID</span><span class="accent">✦</span>
+      <span>TECHNO</span><span class="accent">✦</span>
+      <span>EXPERIMENTAL</span><span class="accent">✦</span>
+      <span>BLACK METAL</span><span class="accent">✦</span>
+      <span>DEATH METAL</span><span class="accent">✦</span>
+      <span>STONER</span><span class="accent">✦</span>
+      <span>ACID</span><span class="accent">✦</span>
+      <span>TECHNO</span><span class="accent">✦</span>
+      <span>EXPERIMENTAL</span><span class="accent">✦</span>
+    </div>
+  </div>
+
+  <!-- BIO -->
+  <section class="bio" id="quienes-somos">
+    <div class="wrap">
+      <div class="section-head rv">
+        <p class="eyebrow">Quiénes somos</p>
+        <h2>Lo orgánico <em>choca</em><br>con lo sintético.</h2>
+      </div>
+      <div class="bio__grid">
+        <div class="bio__copy rv">
+          <p><strong>PHAENOM</strong> es una banda de metal experimental, con tintes progresivos y electrónicos, originaria de EDOMEX/CDMX. Fusiona batería y guitarra con influencias del metal stoner, mezcladas con secuencias de sintetizadores analógicos y samples extraídos de la electrónica bailable, acid y experimental.</p>
+          <p>Formados en 2024, han tenido un gran recibimiento en foros de la CDMX y EDOMEX. Con letras introspectivas —a veces anecdóticas, a veces metafóricas— PHAENOM mezcla su lírica con la energía vocal de <strong>Adín Guzmán</strong>, en un show inmersivo que debes conocer.</p>
+        </div>
+        <figure class="bio__photo rv">
+          <img src="assets/band-studio.jpg" alt="PHAENOM ensayando en estudio: samples, guitarra y batería">
+          <figcaption>En el estudio — Alfredo, Adín y Ache</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- PULLQUOTE -->
+  <section class="pullquote">
+    <div class="wrap">
+      <div class="pullquote__panel rv">
+        <p>Percusiones potentes y guitarras estridentes extraídas del black, death y stoner se mezclan con samples, secuencias electrónicas y vocales guturales.</p>
+        <span class="pullquote__tag">— El sonido PHAENOM</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SONIDO / INFLUENCIAS -->
+  <section class="sonido" id="sonido">
+    <div class="wrap">
+      <div class="section-head rv">
+        <p class="eyebrow">Referencias</p>
+        <h2>Señales que <em>alimentan</em><br>el ruido.</h2>
+      </div>
+      <div class="sonido__grid">
+        <div class="rv">
+          <div class="chips">
+            <span class="chip"><i></i>Carpenter Brut</span>
+            <span class="chip"><i></i>Nine Inch Nails</span>
+            <span class="chip"><i></i>The Prodigy</span>
+            <span class="chip"><i></i>Tool</span>
+            <span class="chip"><i></i>Música Techno</span>
+          </div>
+        </div>
+        <p class="sonido__note rv">Sus influencias para componer van desde <b>Carpenter Brut</b>, <b>Nine Inch Nails</b>, <b>The Prodigy</b> y <b>Tool</b>, hasta la música techno — una mezcla que define el cruce entre metal pesado y producción electrónica que distingue a PHAENOM en cada show.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEMBERS -->
+  <section class="members">
+    <div class="wrap">
+      <div class="section-head rv">
+        <p class="eyebrow">La banda</p>
+        <h2>Tres piezas,<br>un solo <em>circuito</em>.</h2>
+      </div>
+      <div class="members__grid">
+        <div class="member rv">
+          <div class="member__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="15" r="6"/><path d="M6 8 18 8M9 4l-3 4M15 4l3 4"/></svg>
+          </div>
+          <h3>Alfredo</h3>
+          <span class="member__role">Batería</span>
+          <p>Percusión potente como base del cruce entre stoner y death metal. Contacto de booking de la banda.</p>
+          <a class="member__link" href="https://instagram.com/alfred_drums_" target="_blank" rel="noopener">@alfred_drums_ →</a>
+        </div>
+        <div class="member rv">
+          <div class="member__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3 6 13a3 3 0 1 0 4 4L20 7"/><path d="M9 16l-2 2"/><circle cx="7.5" cy="17.5" r=".6" fill="currentColor"/></svg>
+          </div>
+          <h3>Adín</h3>
+          <span class="member__role">Guitarra &amp; Voz</span>
+          <p>Guitarras estridentes y vocales guturales. Lleva la lírica introspectiva de PHAENOM al frente del escenario.</p>
+        </div>
+        <div class="member rv">
+          <div class="member__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-6 4 12 3-9 2 5h4"/></svg>
+          </div>
+          <h3>Ache</h3>
+          <span class="member__role">Samples &amp; Sintetizadores</span>
+          <p>Secuencias analógicas y samples de electrónica bailable, acid y experimental: el pulso sintético del trío.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE GALLERY -->
+  <section class="vivo" id="vivo">
+    <div class="wrap">
+      <div class="section-head rv">
+        <p class="eyebrow">En vivo</p>
+        <h2>Un show <em>inmersivo</em><br>que debes conocer.</h2>
+        <p class="vivo__venue">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>
+          Rock &amp; Son Music Hall — CDMX
+        </p>
+      </div>
+      <div class="mosaic rv">
+        <figure><img src="assets/live-01.jpg" alt="PHAENOM tocando en vivo, vista amplia del escenario en Rock & Son Music Hall"><figcaption>Rock &amp; Son Music Hall</figcaption></figure>
+        <figure><img src="assets/live-02.jpg" alt="Guitarrista de PHAENOM en vivo"><figcaption>Guitarra en vivo</figcaption></figure>
+        <figure><img src="assets/live-03.jpg" alt="Guitarrista de PHAENOM bajo luces verdes"><figcaption>Rock &amp; Son Music Hall</figcaption></figure>
+        <figure><img src="assets/live-04.jpg" alt="PHAENOM en escenario completo durante un show"><figcaption>En escenario</figcaption></figure>
+        <figure><img src="assets/live-05.jpg" alt="Bajista de PHAENOM en vivo"><figcaption>Bajo en vivo</figcaption></figure>
+        <figure><img src="assets/live-06.jpg" alt="Baterista de PHAENOM tocando en vivo"><figcaption>Alfredo en batería</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESCUCHA -->
+  <section class="escucha" id="escucha">
+    <div class="wrap">
+      <div class="section-head rv">
+        <p class="eyebrow">Escúchanos</p>
+        <h2>Dale play<br>al <em>fenómeno</em>.</h2>
+      </div>
+      <div class="escucha__grid">
+        <div class="escucha__card rv">
+          <iframe src="https://open.spotify.com/embed/artist/1eeYnGX0csBYVjjOqDl47u?utm_source=generator&theme=0" height="352" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Reproductor de Spotify de PHAENOM"></iframe>
+        </div>
+        <div class="escucha__copy rv">
+          <div class="stats">
+            <div class="stat"><b>2.7 mil</b><span>Alcance Instagram</span></div>
+            <div class="stat"><b>2.6 mil</b><span>Alcance TikTok</span></div>
+          </div>
+          <p>Escucha <strong>FENÓMENO</strong>, nuestro demo, directo en Spotify. También puedes seguir cada show, lanzamiento y clip en el resto de nuestras redes.</p>
+          <div class="escucha__links">
+            <a class="btn" href="https://www.youtube.com/@PH%C3%86NOM-BAND" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2s-.21-1.5-.86-2.16c-.82-.87-1.74-.87-2.16-.92C15.6 4 12 4 12 4h-.01s-3.6 0-6.58.12c-.42.05-1.34.05-2.16.92-.65.66-.86 2.16-.86 2.16S2.18 9 2.18 10.8v1.68c0 1.8.21 3.6.21 3.6s.21 1.5.86 2.16c.82.87 1.9.84 2.38.93C7.2 19.32 12 19.36 12 19.36s3.6-.01 6.58-.13c.42-.05 1.34-.05 2.16-.92.65-.66.86-2.16.86-2.16s.21-1.8.21-3.6V10.8c0-1.8-.21-3.6-.21-3.6zM9.96 14.98V8.94l5.4 3.02-5.4 3.02z"/></svg>
+              YouTube
+            </a>
+            <a class="btn btn--ghost" href="https://www.tiktok.com/@phaenom_aaa?_r=1&_t=ZS-97ZTkZxAGaS" target="_blank" rel="noopener">TikTok</a>
+            <a class="btn btn--ghost" href="https://www.instagram.com/phaenom_aaa?igsh=djdxbnE3N3Zqb2d3" target="_blank" rel="noopener">Instagram</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="contacto" id="contacto">
+    <div class="wrap">
+      <div class="section-head rv">
+        <p class="eyebrow">Booking &amp; contacto</p>
+        <h2>Llévanos a<br>tu <em>escenario</em>.</h2>
+      </div>
+      <div class="contacto__panel rv">
+        <div class="contacto__info">
+          <p class="lead">Para shows, foros y colaboraciones, contacta directamente a nuestro booking.</p>
+          <div class="contact-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>
+            <div><span class="label">Booking</span><span>Alfredo Guzmán</span></div>
+          </div>
+          <div class="contact-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 5h4l2 5-2.5 1.5a11 11 0 0 0 5 5L14 14l5 2v4a1 1 0 0 1-1 1C9.5 21 3 14.5 3 6a1 1 0 0 1 1-1z"/></svg>
+            <div><span class="label">Teléfono</span><a href="tel:+525554087197">55 54 08 71 97</a></div>
+          </div>
+          <div class="contact-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 6.5l9 6.5 9-6.5"/></svg>
+            <div><span class="label">Email</span><a href="mailto:alfred.guzman.d@gmail.com">alfred.guzman.d@gmail.com</a></div>
+          </div>
+          <div class="contact-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="4.5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>
+            <div><span class="label">Instagram personal</span><a href="https://instagram.com/alfred_drums_" target="_blank" rel="noopener">@alfred_drums_</a></div>
+          </div>
+        </div>
+        <div class="contacto__photo">
+          <img src="assets/live-06.jpg" alt="PHAENOM en vivo, ambiente del escenario">
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer__top">
+      <a class="footer__mark" href="#top" aria-label="PHAENOM — inicio"><img src="assets/logo-wordmark.png" alt="PHAENOM"></a>
+      <div class="social">
+        <a href="https://open.spotify.com/artist/1eeYnGX0csBYVjjOqDl47u?si=7A3CaOEoSu-0H-3Id6Nszw" target="_blank" rel="noopener" aria-label="Spotify" style="color:var(--bone)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.52 17.34a.75.75 0 0 1-1.03.25c-2.82-1.72-6.37-2.11-10.55-1.16a.749.749 0 1 1-.33-1.46c4.58-1.04 8.5-.6 11.66 1.34.36.22.47.69.25 1.03zm1.47-3.27a.94.94 0 0 1-1.29.31c-3.23-1.98-8.15-2.56-11.97-1.4a.937.937 0 1 1-.55-1.79c4.36-1.32 9.78-.68 13.5 1.6.44.27.58.85.31 1.28zm.13-3.4C15.74 8.46 9.35 8.24 5.97 9.29a1.125 1.125 0 1 1-.66-2.15c3.88-1.18 10.92-.93 15.03 1.5a1.124 1.124 0 0 1-1.22 1.85z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/phaenom_aaa?igsh=djdxbnE3N3Zqb2d3" target="_blank" rel="noopener" aria-label="Instagram" style="color:var(--bone)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="4.5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@phaenom_aaa?_r=1&_t=ZS-97ZTkZxAGaS" target="_blank" rel="noopener" aria-label="TikTok" style="color:var(--bone)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 3c.4 2 1.7 3.6 3.9 4v3a7.6 7.6 0 0 1-3.9-1.1v6.4a5.6 5.6 0 1 1-4.8-5.5v3a2.6 2.6 0 1 0 1.8 2.5V3h3z"/></svg>
+        </a>
+        <a href="https://www.facebook.com/share/1GWmjvqSUD/" target="_blank" rel="noopener" aria-label="Facebook" style="color:var(--bone)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7h2.4l.45-3H13.5V9.2c0-.87.24-1.46 1.5-1.46h1.6V5.1C16.2 5 15.1 4.9 13.9 4.9c-2.46 0-4.15 1.5-4.15 4.26V11H7.3v3h2.45v7h3.75z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@PH%C3%86NOM-BAND" target="_blank" rel="noopener" aria-label="YouTube" style="color:var(--bone)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2s-.21-1.5-.86-2.16c-.82-.87-1.74-.87-2.16-.92C15.6 4 12 4 12 4h-.01s-3.6 0-6.58.12c-.42.05-1.34.05-2.16.92-.65.66-.86 2.16-.86 2.16S2.18 9 2.18 10.8v1.68c0 1.8.21 3.6.21 3.6s.21 1.5.86 2.16c.82.87 1.9.84 2.38.93C7.2 19.32 12 19.36 12 19.36s3.6-.01 6.58-.13c.42-.05 1.34-.05 2.16-.92.65-.66.86-2.16.86-2.16s.21-1.8.21-3.6V10.8c0-1.8-.21-3.6-.21-3.6zM9.96 14.98V8.94l5.4 3.02-5.4 3.02z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>PHAENOM — Metal experimental, EDOMEX / CDMX</span>
+      <span>© 2025 PHAENOM. Mediakit 2025.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="player-bar" id="playerBar">
+  <button type="button" class="player-bar__btn" id="playerBtn" aria-label="Reproducir demo">
+    <svg class="player-bar__icon--play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+    <svg class="player-bar__icon--pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+  </button>
+  <div class="eq" aria-hidden="true">
+    <div class="eq__bars">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+  <span class="player-bar__label" id="playerLabel">FENÓMENO — DEMO</span>
+</div>
+
+<audio id="bandAudio" src="assets/audio/phaenom-demo.mp3" preload="none" loop></audio>
+
+<script>
+  // Nav scroll state
+  const nav = document.getElementById('siteNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('is-scrolled', window.scrollY > 12);
+  }, {passive:true});
+
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  navToggle.addEventListener('click', () => {
+    const open = nav.classList.toggle('is-open');
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.getElementById('navLinks').addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') { nav.classList.remove('is-open'); navToggle.setAttribute('aria-expanded','false'); }
+  });
+
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.rv');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0.15, rootMargin:'0px 0px -40px 0px'});
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('is-in'));
+  }
+
+  // Audio player
+  const bandAudio = document.getElementById('bandAudio');
+  const playerBar = document.getElementById('playerBar');
+  const playerBtn = document.getElementById('playerBtn');
+  const playerLabel = document.getElementById('playerLabel');
+
+  function setPlayerError() {
+    playerBar.classList.add('has-error');
+    playerBar.classList.remove('is-playing');
+    playerBtn.disabled = true;
+    playerLabel.textContent = 'Agrega tu pista en assets/audio/phaenom-demo.mp3';
+  }
+
+  bandAudio.addEventListener('error', setPlayerError);
+
+  playerBtn.addEventListener('click', () => {
+    if (playerBar.classList.contains('has-error')) return;
+    if (bandAudio.paused) {
+      bandAudio.play().then(() => {
+        playerBar.classList.add('is-playing');
+        playerBtn.setAttribute('aria-label', 'Pausar demo');
+      }).catch(setPlayerError);
+    } else {
+      bandAudio.pause();
+      playerBar.classList.remove('is-playing');
+      playerBtn.setAttribute('aria-label', 'Reproducir demo');
+    }
+  });
+</script>
+
+</body>
+</html>
