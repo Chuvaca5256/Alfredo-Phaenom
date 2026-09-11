@@ -760,6 +760,49 @@
     line-height:1.25;
   }
   .player-bar.has-error .eq{opacity:.35;}
+
+  /* Cinematic cover and editorial refinement */
+  :root{--bone-dim:rgba(244,241,230,.78);--bone-faint:rgba(244,241,230,.60);}
+  section[id]{scroll-margin-top:80px;}
+  .hero{isolation:isolate;min-height:100svh;padding:8rem 1.5rem 7rem;}
+  .hero__bg{background:#101510;transform:none;filter:none;}
+  .hero__video{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
+  .hero__scrim{background:linear-gradient(180deg,rgba(0,0,0,.38),rgba(0,0,0,.22) 35%,rgba(7,9,7,.62) 78%,var(--void));}
+  .hero__scrim::before{display:none;}
+  .hero__mark{width:min(690px,86vw);animation:none;filter:drop-shadow(0 3px 20px rgba(0,0,0,.6));}
+  .hero__eyebrow{color:var(--bone);letter-spacing:.22em;text-shadow:0 2px 12px #000;}
+  .hero__sub{max-width:520px;color:var(--bone);text-shadow:0 2px 14px #000;line-height:1.7;}
+  .hero>.eq,.scrollcue{display:none;}
+  .hero__motion{position:absolute;right:1.5rem;bottom:1.5rem;min-height:44px;padding:.65rem 1rem;border:1px solid #ffffff65;background:#070907b8;color:var(--bone);font:500 .75rem 'Archivo',sans-serif;cursor:pointer;}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--acid);outline-offset:5px;}
+  .marquee{border-color:var(--panel-edge);}
+  .marquee__track{animation:none;flex-wrap:wrap;justify-content:center;width:auto;gap:1.3rem;padding:1rem;}
+  .marquee__track span{font-size:.85rem;letter-spacing:.13em;}
+  .marquee__track span:nth-child(n+11){display:none;}
+  .marquee__track span.accent{color:var(--acid);}
+  .pullquote{padding:2rem 0;}
+  .pullquote__panel{border-top:1px solid var(--panel-edge);border-bottom:1px solid var(--panel-edge);text-align:left;padding:3rem 0;}
+  .pullquote__panel::before{display:none;}
+  .pullquote__panel p{color:var(--bone);font-weight:400;max-width:850px;margin:0;font-size:clamp(1.9rem,4vw,3rem);}
+  .pullquote__tag{color:var(--acid);letter-spacing:.15em;}
+  .member{background:transparent;border:0;border-top:1px solid var(--panel-edge);padding:1.8rem 0;}
+  .member:hover{transform:none;}
+  .member__icon{display:none;}
+  .member h3{font-size:2.5rem;}
+  .chip{background:transparent;}
+  .bio__photo{margin:0;}
+  .bio__copy p{max-width:62ch;}
+  footer{padding-bottom:7rem;}
+  @media(max-width:600px){
+    .hero__cta{width:100%;max-width:340px;gap:.75rem;}
+    .hero__cta .btn{width:100%;justify-content:center;}
+    .hero__sub{font-size:.95rem;max-width:32ch;}
+    .hero__motion{bottom:1rem;right:1rem;}
+    .eyebrow{letter-spacing:.18em;}
+    .marquee__track{gap:.8rem;}
+    .marquee__track span{font-size:.7rem;}
+  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}*,*::before,*::after{animation:none!important;transition:none!important;}}
 </style>
 </head>
 <body>
@@ -786,11 +829,11 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero__bg"></div>
+    <div class="hero__bg" aria-hidden="true"><video class="hero__video" id="heroVideo" autoplay muted loop playsinline preload="metadata" poster="assets/live-02.jpg"><source src="assets/hero-live.mp4" type="video/mp4"></video></div>
     <div class="hero__scrim"></div>
     <p class="eyebrow hero__eyebrow">Dos hermanos · una sola identidad</p>
     <img class="hero__mark" src="assets/logo-wordmark.png" alt="PHAENOM">
-    <p class="hero__sub">Metal, stoner, electrónica y dark techno fusionados por dos hermanos en una sola identidad sonora y visual. Formados en 2024.</p>
+    <p class="hero__sub">Metal, pulso electr&#243;nico y dos hermanos.<br>Desde EDOMEX / CDMX, desde 2024.</p>
     <div class="hero__cta">
       <a class="btn" href="https://open.spotify.com/artist/1eeYnGX0csBYVjjOqDl47u?si=7A3CaOEoSu-0H-3Id6Nszw" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.52 17.34a.75.75 0 0 1-1.03.25c-2.82-1.72-6.37-2.11-10.55-1.16a.749.749 0 1 1-.33-1.46c4.58-1.04 8.5-.6 11.66 1.34.36.22.47.69.25 1.03zm1.47-3.27a.94.94 0 0 1-1.29.31c-3.23-1.98-8.15-2.56-11.97-1.4a.937.937 0 1 1-.55-1.79c4.36-1.32 9.78-.68 13.5 1.6.44.27.58.85.31 1.28zm.13-3.4C15.74 8.46 9.35 8.24 5.97 9.29a1.125 1.125 0 1 1-.66-2.15c3.88-1.18 10.92-.93 15.03 1.5a1.124 1.124 0 0 1-1.22 1.85z"/></svg>
@@ -808,7 +851,7 @@
         <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
       </div>
     </div>
-    <div class="scrollcue">Scroll</div>
+    <button class="hero__motion" id="heroMotion" type="button" aria-label="Pausar video de portada">Pausar video</button>
   </section>
 
   <!-- MARQUEE -->
@@ -1202,5 +1245,23 @@
   });
 </script>
 
+<script>
+  const heroVideo = document.getElementById('heroVideo');
+  const heroMotion = document.getElementById('heroMotion');
+
+  function updateHeroControl(){
+    heroMotion.textContent = heroVideo.paused ? 'Reproducir video' : 'Pausar video';
+    heroMotion.setAttribute('aria-label', heroMotion.textContent + ' de portada');
+  }
+  heroVideo.muted = true;
+  heroVideo.defaultMuted = true; heroVideo.autoplay = true; heroVideo.play().catch(updateHeroControl);
+  heroMotion.addEventListener('click', () => {
+    if(heroVideo.paused){heroVideo.play().catch(updateHeroControl);}else{heroVideo.pause();}
+  });
+  heroVideo.addEventListener('play', updateHeroControl);
+  heroVideo.addEventListener('pause', updateHeroControl);
+
+  updateHeroControl();
+</script>
 </body>
 </html>
